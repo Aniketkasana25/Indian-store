@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import type { Item } from '../types';
 import { generateDescriptionFromImage } from '../services/geminiService';
@@ -44,14 +43,17 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onAddItem }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !price || !imageBase64) {
-        alert("Please fill in all fields and upload an image.");
+    const numericPrice = parseFloat(price);
+
+    if (!name || !price || isNaN(numericPrice) || numericPrice < 0 || !imageBase64) {
+        alert("Please fill in all fields with valid data: item name, a non-negative price, and an image.");
         return;
     }
+
     onAddItem({
       name,
       description,
-      price: parseFloat(price),
+      price: numericPrice,
       imageUrl: imageBase64,
     });
     // Reset form

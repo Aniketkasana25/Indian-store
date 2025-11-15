@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 
 if (!process.env.API_KEY) {
@@ -28,12 +27,21 @@ export async function generateDescriptionFromImage(
     
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: { parts: [textPart, imagePart] },
+        // Common practice to put image before text for multimodal prompts
+        contents: { parts: [imagePart, textPart] },
     });
 
-    return response.text.trim();
+    const text = response.text;
+    
+    if (typeof text === 'string' && text.length > 0) {
+        return text.trim();
+    } else {
+        console.warn("Gemini response was empty or not text:", response);
+        return "The AI could not generate a description for this image. Please try another image or write a description manually.";
+    }
   } catch (error) {
     console.error("Error generating description from Gemini:", error);
-    return "Error generating description. Please try again or write one manually.";
+    // It's better to return a user-friendly message
+    return "An error occurred while generating the description with AI. Please check the console for details and try again, or write one manually.";
   }
 }
