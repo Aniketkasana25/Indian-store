@@ -1,0 +1,5 @@
+{
+  "name": "Indian Emporium Manager",
+  "description": "An application to manage items in an Indian department store. Features include adding items with images and prices, and AI-powered product description generation using the Gemini API.",
+  "requestFramePermissions": []
+}
